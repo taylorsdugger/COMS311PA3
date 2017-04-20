@@ -24,45 +24,51 @@ public class dynamicProgramming {
     	int n = M.length;
     	
     	
-        ArrayList<Integer> minCostVC = new ArrayList<Integer>(2 * n);
-        int minCost = 0;
+      
         
-        for( int y = 1; y < m-1; y++)
+        Integer[][] CostMatrix = new Integer[n][m];
+        for(int i = 0;i<m;i++)
         {
-        	int cost = 0;
-        	ArrayList<Integer> costVC = new ArrayList<Integer>(2 * n);
-        	
-	        for (int x = 0;x < n;x=x+2)
-	        {
-	        	if(M[x/2][y-1] <= M[x/2][y] &&  M[x/2][y-1] <= M[0][y+1] ) //first value is smallest
-	        	{
-	        		cost = cost + M[x/2][y-1];
-	        		costVC.add(x, x/2);
-	        		costVC.add(x-1, y-1);
-	        	}
-	        	else if(M[x/2][y] <= M[x/2][y+1])
-	        	{
-	        		cost = cost + M[x/2][y];
-	        		costVC.add(x, x/2);
-	        		costVC.add(x-1, y);
-	        		
-	        	}
-	        	else{ // M[0][y+1] is the smallest then
-	        		cost = cost + M[x/2][y+1];
-	        		costVC.add(x, x/2);
-	        		costVC.add(x-1, y+1);
-	        		
-	        	} 	
-	        }
-	        if(y == 1 || cost<minCost){
-	        	minCostVC = costVC;
-	        	minCost = cost;
-	        }
+        	CostMatrix[0][i] = M[0][i];
         }
+
+        for (int x = 1; x < n;x++)
+        {
+        	for(int y = 0; y < m; y++)
+        	{
+        		Integer temp = null;
+        		if( y!=0 && M[x-1][y-1] <= M[x-1][y] &&  M[x-1][y-1] <= M[x-1][y+1] ) //first value is smallest
+	        	{
+        			temp = M[x-1][y-1] + M[x][y];
+	        	}
+	        	else if(M[x-1][y] <= M[x-1][y+1]) //the middle is the smallest
+	        	{
+	        		temp = M[x-1][y] + M[x][y];
+	        		
+	        	}
+	        	else if(y!=m-1) {// M[x-1][y+1] is the smallest then
+
+	        		temp = M[x-1][y+1] + M[x][y];
+	        	} 	
+//        	else{
+//        	}
+        		if(temp==null)
+        		{
+        			System.out.println("Error");
+        		}
+        	
+        		else if(CostMatrix[x][y] == null || CostMatrix[x][y] < temp)
+        		{
+        			CostMatrix[x][y] = temp;
+        		}
+        	}
+        }
+        ArrayList<Integer> minCostVC = new ArrayList<Integer>(2 * n);
         
-        
-        
-        
+        for (int x = n-1; x > -1;x--)
+        {
+
+        	}
 
         return minCostVC;
     }
@@ -89,11 +95,13 @@ public class dynamicProgramming {
         }
 
         int n = x.length(); //length n
+        int m = y.length();//length m
+        
         String z = "";
 
         for(int i = 0; i < n; i++){
             char a = y.charAt(i);
-
+            char b = x.charAt(i);
         }
 
         return null;
