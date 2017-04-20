@@ -13,35 +13,74 @@ public class dynamicProgramming {
      * minCostVC(int[][] M): Returns a min-cost vertical cut. Type of this method must be
      * array list of integers. Note that if M has n rows, the the returned array list
      * has exactly 2n integers. You must use dynamic programming paradigm to arrive
-     * at your code. For this, ﬁrst deﬁne the recurrence relation. Then arrive at an
-     * iterative solution. Your code must be iterative, not recursive and should not use
-     * use memoization. Otherwise you will receive zero credit.
+     * at your code. 
      *
      * @param M Matrix m
      * @return min-cost vertical cut
      */
     public static ArrayList<Integer> minCostVC(int[][] M){
 
-        ArrayList<Integer> minVC;
+    	int m = M[0].length;
+    	int n = M.length;
+    	
+    	
+        ArrayList<Integer> minCostVC = new ArrayList<Integer>(2 * n);
+        int minCost = 0;
+        
+        for( int y = 1; y < m-1; y++)
+        {
+        	int cost = 0;
+        	ArrayList<Integer> costVC = new ArrayList<Integer>(2 * n);
+        	
+	        for (int x = 0;x < n;x=x+2)
+	        {
+	        	if(M[x/2][y-1] <= M[x/2][y] &&  M[x/2][y-1] <= M[0][y+1] ) //first value is smallest
+	        	{
+	        		cost = cost + M[x/2][y-1];
+	        		costVC.add(x, x/2);
+	        		costVC.add(x-1, y-1);
+	        	}
+	        	else if(M[x/2][y] <= M[x/2][y+1])
+	        	{
+	        		cost = cost + M[x/2][y];
+	        		costVC.add(x, x/2);
+	        		costVC.add(x-1, y);
+	        		
+	        	}
+	        	else{ // M[0][y+1] is the smallest then
+	        		cost = cost + M[x/2][y+1];
+	        		costVC.add(x, x/2);
+	        		costVC.add(x-1, y+1);
+	        		
+	        	} 	
+	        }
+	        if(y == 1 || cost<minCost){
+	        	minCostVC = costVC;
+	        	minCost = cost;
+	        }
+        }
+        
+        
+        
         
 
-        return null;
+        return minCostVC;
     }
 
     /**
      * stringAlignment(String x, String y) . Assume that x is a string of length n
-     * and y is a string of length m such that n ≥ m. This method returns a string z
-     * (obtained by inserting $ at n − m indices in y) such that AlignCost(x,z) ≤ AlignCost(x,y)
+     * and y is a string of length m such that n â‰¥ m. This method returns a string z
+     * (obtained by inserting $ at n âˆ’ m indices in y) such that AlignCost(x,z) â‰¤ AlignCost(x,y)
      * over all possible y. You may assume that length of x is at least the length of y and
      * neither of x or y has the character $. Note that the length of the returned string z
      * must equal the length of x. You must use dynamic programming paradigm to arrive at
-     * your code. For this, ﬁrst deﬁne the recurrence relation. Then arrive at an
+     * your code. For this, ï¬�rst deï¬�ne the recurrence relation. Then arrive at an
      * iterative solution. Your code must be iterative, not recursive and should not use
      * use memoization. Otherwise you will receive zero credit.
      *
      * @param x String x of length n
      * @param y string y of length m
-     * @return string z such that AlignCost(x,z) ≤ AlignCost(x,y) over all possible y
+     * @return string z such that AlignCost(x,z) â‰¤ AlignCost(x,y) over all possible y
      */
     public static String stringAlignment(String x, String y){
 
@@ -61,7 +100,7 @@ public class dynamicProgramming {
     }
 
     /**
-     * Given two characters a and b, we deﬁne a function penalty(a,b) as follows:
+     * Given two characters a and b, we deï¬�ne a function penalty(a,b) as follows:
      * if a equals b, penalty(a,b) = 0. If a or b equals $, then penalty(a,b) = 4;
      * otherwise penalty(a,b) = 2.
      *
