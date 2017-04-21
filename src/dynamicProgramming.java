@@ -22,10 +22,7 @@ public class dynamicProgramming {
 
     	int m = M[0].length;
     	int n = M.length;
-    	
-    	
-      
-        
+
         Integer[][] CostMatrix = new Integer[n][m];
         for(int i = 0;i<m;i++)
         {
@@ -37,40 +34,98 @@ public class dynamicProgramming {
         	for(int y = 0; y < m; y++)
         	{
         		Integer temp = null;
-        		if( y!=0 && M[x-1][y-1] <= M[x-1][y] &&  M[x-1][y-1] <= M[x-1][y+1] ) //first value is smallest
+        		if( y!= 0&& y!=m-1  && CostMatrix[x-1][y-1] <= CostMatrix[x-1][y] &&  CostMatrix[x-1][y-1] <= CostMatrix[x-1][y+1] ) //first value is smallest
 	        	{
-        			temp = M[x-1][y-1] + M[x][y];
+        			temp = CostMatrix[x-1][y-1] + M[x][y];
 	        	}
-	        	else if(M[x-1][y] <= M[x-1][y+1]) //the middle is the smallest
-	        	{
-	        		temp = M[x-1][y] + M[x][y];
+        		else if (y!=m-1 && y!= 0 && CostMatrix[x-1][y+1] <= CostMatrix[x-1][y] && CostMatrix[x-1][y+1] <= CostMatrix[x-1][y-1] )
+        		{
+        			temp = CostMatrix[x-1][y+1] + M[x][y];
+        		}
+	        	else {
+	        		if(y == 0)
+	        		{
+	        			if(CostMatrix[x-1][y] < CostMatrix[x-1][y+1] )
+	        			{
+	        				temp = CostMatrix[x-1][y] + M[x][y];
+	        			}
+	        			else{
+	        				temp = CostMatrix[x-1][y+1] + M[x][y];
+	        			}
+	        		}
+	        		else if(y == m-1)
+	        		{
+	        			if(CostMatrix[x-1][y-1] < CostMatrix[x-1][y] )
+	        			{
+	        				temp = CostMatrix[x-1][y-1] + M[x][y];
+	        			}
+	        			else{
+	        				temp = CostMatrix[x-1][y] + M[x][y];
+	        			}
+	        		}
+	        		else{
+	        			temp = CostMatrix[x-1][y] + M[x][y];
+	        		}
 	        		
-	        	}
-	        	else if(y!=m-1) {// M[x-1][y+1] is the smallest then
-
-	        		temp = M[x-1][y+1] + M[x][y];
 	        	} 	
-//        	else{
-//        	}
-        		if(temp==null)
-        		{
-        			System.out.println("Error");
-        		}
-        	
-        		else if(CostMatrix[x][y] == null || CostMatrix[x][y] < temp)
-        		{
+
         			CostMatrix[x][y] = temp;
-        		}
+
         	}
         }
-        ArrayList<Integer> minCostVC = new ArrayList<Integer>(2 * n);
-        
-        for (int x = n-1; x > -1;x--)
-        {
+        Integer[] minCostVC = new Integer[2 * n];
 
+        int iteratorY = 0;
+        int cost = CostMatrix[n-1][iteratorY];
+        
+        //finds the lowest costing value in the cost matrix to work back from
+        for(int y = 1; y<m;y++)
+        {
+        	if(CostMatrix[n-1][y] < CostMatrix[n-1][iteratorY])
+        	{
+
+        		iteratorY = y;
+        		cost  =  CostMatrix[n-1][y];
+        	}
+        }
+		minCostVC[2*n - 2] = n-1 ;
+		minCostVC[2*n - 1] = iteratorY ;
+        
+        
+        for(int x = n - 2 ; x >-1; x--)
+        {
+        	cost = cost - M[x+1][iteratorY];
+        	
+        	if(iteratorY!= 0  &&CostMatrix[x][iteratorY-1] == cost)
+        	{
+        		minCostVC[ 2*x] =  x ;
+        		minCostVC[2*x + 1] =  iteratorY-1 ;
+        		iteratorY = iteratorY-1;
+        	}
+        	else if(CostMatrix[x][iteratorY]== cost)
+        	{
+        		minCostVC[ 2*x] =  x ;
+        		minCostVC[2*x + 1] =  iteratorY ;
+        		
+        	}
+        	else if(iteratorY!= m-1 && CostMatrix[x][iteratorY+1]== cost)
+        	{
+        		minCostVC[ 2*x] =  x ;
+        		minCostVC[2*x + 1] =  iteratorY+1 ;
+        		iteratorY = iteratorY+1;
         	}
 
-        return minCostVC;
+        	
+        }
+        
+        
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+        for(int i = 0; i < 2*n;i++)
+        {
+        	ret.add(minCostVC[i]);
+        }
+
+        return ret;
     }
 
     /**
