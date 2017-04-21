@@ -10,10 +10,16 @@ public class ImageProcessor {
 	}
 	
 	public Picture reduceWidth(double x){
+		double width = pic.width()*x;
 		
-		for (int i = (int) x; i>0 ;i--)
+		int decrement = (int) Math.floor(width);
+		
+		int f = 0;
+		for (int i = decrement ; i>0 ;i--)
 		{
+			System.out.println(f);
 			reduceWidthbyOne();
+			f++;
 		}
 		return pic;
 		
@@ -26,67 +32,77 @@ public class ImageProcessor {
 		int width = pic.width();
 		
 		
-		
-		Integer[][] Yimportance = new Integer[height][width];
-		for(int i = 0; i < height;i++)
-		{
-			for(int j = 0; j <width;j++)
-			{
-				if(i==0)
-				{
-					Yimportance[i][j] = Dist(pic.get(height-1, j), pic.get(i+1, j));
-				}
-				else if(i==height-1)
-				{
-					Yimportance[i][j] = Dist(pic.get(i-1, j), pic.get(0, j));
-				}
-				else{
-					Yimportance[i][j] = Dist(pic.get(i-1, j), pic.get(i+1, j));
-				}
-			}
-		}
-		Integer[][] Ximportance = new Integer[height][width];
-		for(int i = 0; i < height;i++)
-		{
-			for(int j = 0; j <width;j++)
-			{
-				if(j==0)
-				{
-					Ximportance[i][j] = Dist(pic.get(i, width-1), pic.get(i, j+1));
-				}
-				else if(j==width-1)
-				{
-					Ximportance[i][j] = Dist(pic.get(i,0), pic.get(i,j+1));
-				}
-				else{
-					Ximportance[i][j] = Dist(pic.get(i, j-1), pic.get(i, j+1));
-				}
-			}
-		}
-		
 		int[][] I = new int[height][width];
-		for(int i = 0; i < height;i++)
+		for(int h = 0; h < height;h++)
 		{
-			for(int j = 0; j <width;j++)
+			for(int w = 0; w <width;w++)
 			{
-				I[i][j] = Ximportance[i][j]  + Yimportance[i][j];
+				if(h!=0 && h!=height-1 && w!=0 && w!= width-1)//when its not an edge case
+				{
+					I[h][w] = Dist(pic.get(w-1, h), pic.get(w+1, h)) + Dist(pic.get(w, h+1),  pic.get(w, h-1) );
+				}
+				else if(h==0  && w!=0 && w!= width-1) //when height is zero, it wraps around to grab value
+				{
+					I[h][w] = Dist(pic.get(w-1, h), pic.get(w+1, h)) + Dist(pic.get(w, h+1),  pic.get(w, height-1) );
+				}
+				else if(h==height-1 && w!=0 && w!= width-1)//when height is at capacity it wraps around
+				{
+					I[h][w] = Dist(pic.get(w-1, h), pic.get(w+1, h)) + Dist(pic.get(w, 0),  pic.get(w, height-1) );
+				}
+				else if(h!=0 && h!=height-1 && w==0 ) //when the widith is at the beginning it wraps around
+				{
+					I[h][w] = Dist(pic.get(width-1, h), pic.get(w+1, h)) + Dist(pic.get(w, h+1),  pic.get(w, h-1) );
+				}
+				else if(h!=0 && h!=height-1 &&  w== width-1) //when the width is at max, it wraps around 
+				{
+					I[h][w] = Dist(pic.get(w-1, h), pic.get(0, h)) + Dist(pic.get(w, h+1),  pic.get(w, h-1) );
+				}
+				else if(h==0 && w == 0) // 0, 0 corner case
+				{
+					I[h][w] = Dist(pic.get(width-1, h), pic.get(w+1, h)) + Dist(pic.get(w, h+1),  pic.get(w, height-1) );
+				}
+				else if(h==height-1 && w == 0) // height-1, 0 corner case
+				{
+					I[h][w] = Dist(pic.get(width-1, h), pic.get(w+1, h)) + Dist(pic.get(w, 0),  pic.get(w, height-1) );
+				}
+				else if(h==0 && w==width-1) //0, width-1 corner case
+				{
+					I[h][w] = Dist(pic.get(w-1, h), pic.get(0, h)) + Dist(pic.get(w, h+1),  pic.get(w, height-1) );
+				}
+				else if(h==height-1 && w==width-1) //heigh-1, width-1 corner Case
+				{
+					I[h][w] = Dist(pic.get(w-1, h), pic.get(0, h)) + Dist(pic.get(w, 0),  pic.get(w, h-1) );
+				}
+				else{
+					System.out.println("error at ("+h +","+w+")");
+				}
 			}
 		}
+		
+		
+		
+
 		
 		ArrayList<Integer> minCostCut = dynamicProgramming.minCostVC(I);
 		
 		Picture newPic = new Picture( width-1, height);
 		
-		for(int i = 0; i < height;i++)
+		for(int h = 0; h < height;h++)
 		{
-			for(int j = 0; j <width;j++)
+			int y = minCostCut.get(h+1);
+			
+			for(int w = 0; w < y;w++)
 			{
-				
+				newPic.set( w,h, pic.get(w,h));
+			}
+			
+			for(int w = y+1; w < width-1;w++)
+			{
+				newPic.set( w-1,h,pic.get(w,h));
 			}
 		}
 		
-		
-		
+		pic = newPic;
 		
 	}
 	
