@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-//Created by Eric Fehringer 
+//Created by Eric Fehringer + Taylor Dugger
 
 public class ImageProcessor {
 	

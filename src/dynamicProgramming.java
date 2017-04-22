@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Created by taylo on 4/18/2017.
+ * Taylor Dugger + Eric Fehringer
  */
 public class dynamicProgramming {
 
