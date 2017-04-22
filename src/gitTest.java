@@ -19,11 +19,11 @@ public class gitTest {
 		//System.out.print((int )5.7);
 		
 		
-       ImageProcessor s = new ImageProcessor("Original.jpg");
-       Picture p = s.reduceWidth(0.5);
-        p.save("test1.jpg");
+       //ImageProcessor s = new ImageProcessor("Original.jpg");
+       //Picture p = s.reduceWidth(0.5);
+       // p.save("test1.jpg");
 
-        
+        System.out.println(dynamicProgramming.stringAlignment("ABCD","BCD"));
 
        
 

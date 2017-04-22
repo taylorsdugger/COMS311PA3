@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by taylo on 4/18/2017.
@@ -155,15 +157,34 @@ public class dynamicProgramming {
 
         int n = x.length(); //length n
         int m = y.length();//length m
-        
-        String z = "";
 
-        for(int i = 0; i < n; i++){
-            char a = y.charAt(i);
-            char b = x.charAt(i);
+        String z = "";
+        StringBuilder curString;
+
+        int lowestPenalty = Integer.MAX_VALUE;
+        int cost[] = new int[n];
+        int in = 0;
+
+        for(int i = 0; i < n-m; i++){
+            for(int j = 0; j <= m; j++){
+                z = y;
+                curString = new StringBuilder(z.substring(0,j) + "$" + z.substring(j,m));
+
+                int curPenalty = 0;
+
+                for(int l = 0; l < n; l++){
+                    cost[j] += penalty(x.charAt(l), curString.charAt(l));
+                }
+
+                //Collections.min(cost);
+
+            }
+
+            z = z.substring(0,in) + "$" + z.substring(in,m);
+
         }
 
-        return null;
+        return z;
     }
 
     /**
@@ -175,7 +196,7 @@ public class dynamicProgramming {
      * @param b character b
      * @return penalty cost
      */
-    private int penalty(Character a, Character b){
+    private static int penalty(Character a, Character b){
 
         if(a.equals(b)){
             return 0;
