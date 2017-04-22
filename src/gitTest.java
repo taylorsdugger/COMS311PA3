@@ -23,7 +23,7 @@ public class gitTest {
        //Picture p = s.reduceWidth(0.5);
        // p.save("test1.jpg");
 
-        System.out.println(dynamicProgramming.stringAlignment("ABCD","BCD"));
+        System.out.println(dynamicProgramming.stringAlignment("ADFG","AG"));
 
        
 

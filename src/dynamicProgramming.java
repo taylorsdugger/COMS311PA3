@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -158,33 +159,54 @@ public class dynamicProgramming {
         int n = x.length(); //length n
         int m = y.length();//length m
 
-        String z = "";
+        //Temp Strings
+        String align;
         StringBuilder curString;
 
+        //Return String
+        StringBuilder z = new StringBuilder();
+        z.append(y);
+        //LowPen
         int lowestPenalty = Integer.MAX_VALUE;
-        int cost[] = new int[n];
+        //Calculates the penalty
+        ArrayList<Integer> stringPen = new ArrayList<>();
+        //Index where lowest pen is
         int in = 0;
 
+        //how many $'s to add
         for(int i = 0; i < n-m; i++){
+            //go through string y
             for(int j = 0; j <= m; j++){
-                z = y;
-                curString = new StringBuilder(z.substring(0,j) + "$" + z.substring(j,m));
-
-                int curPenalty = 0;
-
-                for(int l = 0; l < n; l++){
-                    cost[j] += penalty(x.charAt(l), curString.charAt(l));
+                align = z.toString();
+                //add to our curString a $ at each spot j, so every spot in string
+                curString = new StringBuilder(align.substring(0,j) + "$" + align.substring(j, align.length()));
+                //pen =0
+                int pen = 0;
+                //go though the string we have now and figure out what the current cost is
+                for(int l = 0; l < curString.length(); l++){
+                    pen += penalty(x.charAt(l), curString.charAt(l));
                 }
-
-                //Collections.min(cost);
-
+                //if string isnt complete add more $ cost to even out
+                pen += ((n-curString.length()) * 4);
+                //add to our array the current cost of that string
+                stringPen.add(pen);
             }
 
-            z = z.substring(0,in) + "$" + z.substring(in,m);
+            //now look through the array and see what the best option is
+            for (int k = 0; k < stringPen.size(); k++) {
+                if(stringPen.get(k) < lowestPenalty){
+                    //if its the lowest then update
+                    lowestPenalty = stringPen.get(k);
+                    in = k;
+                }
+            }
 
+            stringPen.clear();
+            //add to our z return the $ and the correct location
+            z.insert(in,"$");
         }
 
-        return z;
+        return z.toString();
     }
 
     /**
